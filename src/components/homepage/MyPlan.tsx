@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import Image from "next/image";
@@ -25,10 +23,7 @@ const MyPlanPage = () => {
   const [activeTab, setActiveTab] =
     useState<"today" | "saved">("today");
 
-  // --------------------------------
   // Remove workout from plan
-  // --------------------------------
-
   const removeWorkout = (
     id: string | number,
     index: number
@@ -41,19 +36,13 @@ const MyPlanPage = () => {
     );
   };
 
-  // --------------------------------
   // Current list
-  // --------------------------------
-
   const workouts =
     activeTab === "today"
       ? addWorkouts
       : savedWorkouts;
 
-  // --------------------------------
   // Summary
-  // --------------------------------
-
   const totalExercises = addWorkouts.length;
 
   const totalMinutes = addWorkouts.reduce(
@@ -72,15 +61,9 @@ const MyPlanPage = () => {
   return (
     <div className="min-h-screen bg-[#0d0f12] text-white">
 
-
-      {/* =========================================
-          MAIN
-      ========================================== */}
-
       <main className="mx-auto max-w-[1184px] px-6 py-[42px]">
 
         {/* Heading */}
-
         <h1 className="text-[32px] font-black leading-none tracking-tight">
           MY PLAN
         </h1>
@@ -89,19 +72,12 @@ const MyPlanPage = () => {
           Cap of five lifts for today. Finish them, then load more.
         </p>
 
-
-        {/* =========================================
-            SUMMARY CARD
-        ========================================== */}
-
+        {/* Summary */}
         <section className="mt-6 h-[122px] rounded-[17px] border border-[#282e38] bg-[#13171d]">
 
           <div className="grid h-full grid-cols-3">
 
-            {/* Exercises */}
-
             <div className="flex flex-col justify-center border-r border-[#282e38] px-6">
-
               <span className="text-[12px] text-[#9299a5]">
                 Exercises
               </span>
@@ -109,14 +85,9 @@ const MyPlanPage = () => {
               <span className="mt-1 text-[40px] font-black leading-none text-[#b6ff00]">
                 {totalExercises}
               </span>
-
             </div>
 
-
-            {/* Minutes */}
-
             <div className="flex flex-col justify-center border-r border-[#282e38] px-8">
-
               <span className="text-[12px] text-[#9299a5]">
                 Minutes
               </span>
@@ -124,14 +95,9 @@ const MyPlanPage = () => {
               <span className="mt-1 text-[40px] font-black leading-none">
                 {totalMinutes}
               </span>
-
             </div>
 
-
-            {/* Calories */}
-
             <div className="flex flex-col justify-center px-8">
-
               <span className="text-[12px] text-[#9299a5]">
                 Calories
               </span>
@@ -139,28 +105,18 @@ const MyPlanPage = () => {
               <span className="mt-1 text-[40px] font-black leading-none">
                 {totalCalories}
               </span>
-
             </div>
 
           </div>
-
         </section>
 
-
-        {/* =========================================
-            TABS + SORT
-        ========================================== */}
-
+        {/* Tabs */}
         <div className="mt-8 flex items-center justify-between">
-
-          {/* Tabs */}
 
           <div className="flex h-[40px] rounded-[11px] border border-[#292f39] bg-[#151920] p-[4px]">
 
             <button
-              onClick={() =>
-                setActiveTab("today")
-              }
+              onClick={() => setActiveTab("today")}
               className={`rounded-[8px] px-4 text-[12px] transition ${
                 activeTab === "today"
                   ? "bg-[#242a35] font-semibold text-white"
@@ -170,11 +126,8 @@ const MyPlanPage = () => {
               Today's Plan
             </button>
 
-
             <button
-              onClick={() =>
-                setActiveTab("saved")
-              }
+              onClick={() => setActiveTab("saved")}
               className={`rounded-[8px] px-5 text-[12px] transition ${
                 activeTab === "saved"
                   ? "bg-[#242a35] font-semibold text-white"
@@ -186,9 +139,7 @@ const MyPlanPage = () => {
 
           </div>
 
-
           {/* Sort */}
-
           <div className="flex items-center gap-3">
 
             <span className="text-[12px] text-[#8a919c]">
@@ -199,19 +150,15 @@ const MyPlanPage = () => {
               Duration
 
               <span className="text-[#858c97]">
-               ⌄
+                ⌄
               </span>
-
             </button>
 
           </div>
 
         </div>
 
-
-        {/* =========================================
-            EMPTY STATE
-        ========================================== */}
+        {/* Content */}
 
         {workouts.length === 0 ? (
 
@@ -231,10 +178,6 @@ const MyPlanPage = () => {
 
         ) : (
 
-          /* =========================================
-             WORKOUT CARDS
-          ========================================== */
-
           <div className="mt-6 flex flex-col gap-4">
 
             {workouts.map((workout, index) => (
@@ -244,9 +187,7 @@ const MyPlanPage = () => {
                 className="flex min-h-[114px] items-center rounded-[16px] border border-[#282e38] bg-[#13171d] px-4 py-4"
               >
 
-                {/* ---------------------------------
-                    IMAGE
-                ---------------------------------- */}
+                {/* Image */}
 
                 <div className="relative h-[80px] w-[144px] shrink-0 overflow-hidden rounded-[10px]">
 
@@ -260,10 +201,7 @@ const MyPlanPage = () => {
 
                 </div>
 
-
-                {/* ---------------------------------
-                    INFORMATION
-                ---------------------------------- */}
+                {/* Information */}
 
                 <div className="ml-4 min-w-0 flex-1">
 
@@ -275,61 +213,39 @@ const MyPlanPage = () => {
                     {workout.equipment}
                   </p>
 
-
-                  {/* Meta */}
-
                   <div className="mt-2 flex items-center gap-4 text-[12px] text-[#a4aab4]">
 
-                    {/* Duration */}
-
                     <span className="flex items-center gap-1.5">
-
                       <span className="text-[15px] text-[#b6ff00]">
                         ◷
                       </span>
 
                       {workout.duration} min
-
                     </span>
 
-
-                    {/* Calories */}
-
                     <span className="flex items-center gap-1.5">
-
                       <span className="text-[14px] text-[#b6ff00]">
                         ♨
                       </span>
 
                       {workout.caloriesBurned} kcal
-
                     </span>
 
-
-                    {/* Rating */}
-
                     <span className="flex items-center gap-1.5">
-
                       <span className="text-[16px] text-[#b6ff00]">
                         ☆
                       </span>
 
                       {workout.rating}
-
                     </span>
 
                   </div>
 
                 </div>
 
-
-                {/* ---------------------------------
-                    ACTIONS
-                ---------------------------------- */}
+                {/* Actions */}
 
                 <div className="ml-5 flex shrink-0 items-center gap-3">
-
-                  {/* View Details */}
 
                   <button
                     className="h-[35px] rounded-full border border-[#38404d] px-5 text-[12px] text-[#e0e3e7] transition hover:border-[#b6ff00] hover:text-[#b6ff00]"
@@ -337,11 +253,7 @@ const MyPlanPage = () => {
                     View Details
                   </button>
 
-
-                  {/* TODAY'S PLAN */}
-
                   {activeTab === "today" && (
-
                     <button
                       onClick={() =>
                         removeWorkout(
@@ -351,22 +263,12 @@ const MyPlanPage = () => {
                       }
                       className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
                     >
-
-                      <span>
-                        ✓
-                      </span>
-
+                      <span>✓</span>
                       Mark as Done
-
                     </button>
-
                   )}
 
-
-                  {/* SAVED */}
-
                   {activeTab === "saved" && (
-
                     <button
                       onClick={() =>
                         moveToPlan(
@@ -376,34 +278,24 @@ const MyPlanPage = () => {
                       }
                       className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
                     >
-
                       Add to Plan
-
                     </button>
-
                   )}
 
-
-                  {/* Remove */}
-
-                  <button
-                    onClick={() => {
-
-                      if (activeTab === "today") {
-
+                  {activeTab === "today" && (
+                    <button
+                      onClick={() =>
                         removeWorkout(
                           workout.id,
                           index
-                        );
-
+                        )
                       }
-
-                    }}
-                    aria-label="Remove workout"
-                    className="ml-1 flex h-8 w-8 items-center justify-center text-[19px] text-[#68717f] transition hover:text-red-400"
-                  >
-                    ×
-                  </button>
+                      aria-label="Remove workout"
+                      className="ml-1 flex h-8 w-8 items-center justify-center text-[19px] text-[#68717f] transition hover:text-red-400"
+                    >
+                      ×
+                    </button>
+                  )}
 
                 </div>
 
@@ -412,12 +304,9 @@ const MyPlanPage = () => {
             ))}
 
           </div>
-
         )}
 
       </main>
-
-
     </div>
   );
 };

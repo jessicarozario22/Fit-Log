@@ -1,76 +1,147 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
+import { usePathname } from "next/navigation";
 import logo from "@/assets/logo.png";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 const Nav = () => {
+  const pathname = usePathname();
+
+  const context = useContext(WorkoutContext);
+
+  if (!context) {
+    throw new Error("Nav must be used inside WorkoutProvider");
+  }
+
+  const { addWorkouts, savedWorkouts } = context;
+
+  const isWorkoutsActive = pathname === "/workouts";
+  const isMyPlanActive = pathname === "/ListedWorkouts";
+
   return (
-    <div className="navbar bg-base-100 shadow-sm">
-      
-      {/* Left / Mobile Menu */}
+    <div className="navbar bg-base-100 shadow-sm px-4 lg:px-8">
+
+      {/* LEFT — Logo + Name */}
       <div className="navbar-start">
-        <div className="dropdown">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src={logo}
+            alt="FITLOG Logo"
+            width={40}
+            height={40}
+          />
+
+          <h2 className="text-2xl font-bold">FITLOG</h2>
+        </Link>
+
+        {/* Mobile Menu */}
+        <div className="dropdown ml-2 lg:hidden">
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost lg:hidden"
+            className="btn btn-ghost btn-sm"
           >
-            <Image src={logo} alt="Logo" width={40} height={40} />
-            <h2 className="text-2xl font-bold">FITLOG</h2>
+            ☰
           </div>
 
           <ul
             tabIndex={-1}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
           >
-            <li className="hover:bg-lime-400/5 hover:rounded-full hover:text-lime-400 hover:font-semibold">
-              <Link href="/workouts" className="rounded-full">
+            <li>
+              <Link
+                href="/workouts"
+                className={
+                  isWorkoutsActive
+                    ? "text-lime-400 font-semibold bg-lime-400/5"
+                    : ""
+                }
+              >
                 Workouts
               </Link>
             </li>
 
-            <li className="hover:bg-lime-400/5 hover:rounded-full hover:text-lime-400 hover:font-semibold">
-              <Link href="/my-plan" className="rounded-full">
+            <li>
+              <Link
+                href="/ListedWorkouts"
+                className={
+                  isMyPlanActive
+                    ? "text-lime-400 font-semibold bg-lime-400/5"
+                    : ""
+                }
+              >
                 My Plan
               </Link>
             </li>
           </ul>
         </div>
-
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image src={logo} alt="FITLOG Logo" width={40} height={40} />
-          <h2 className="text-2xl font-bold">FITLOG</h2>
-        </Link>
       </div>
 
-      {/* Desktop Navigation */}
+
+      {/* MIDDLE — Navigation */}
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li className="hover:bg-lime-400/5 hover:rounded-full hover:text-lime-400 hover:font-semibold  active:text-lime-400 hover:font-semibold ">
-            <Link href="/workouts" className="rounded-full">
+        <ul className="menu menu-horizontal gap-2">
+
+          {/* Workouts */}
+          <li>
+            <Link
+              href="/workouts"
+              className={`rounded-full px-4 ${
+                isWorkoutsActive
+                  ? "text-lime-400 font-semibold bg-lime-400/5"
+                  : "hover:bg-lime-400/5 hover:text-lime-400"
+              }`}
+            >
               Workouts
             </Link>
           </li>
 
-          <li className="hover:bg-lime-400/5 hover:rounded-full hover:text-lime-400 hover:font-semibold">
-            <Link href="/my-plan" className="rounded-full">
+          {/* My Plan */}
+          <li>
+            <Link
+              href="/ListedWorkouts"
+              className={`rounded-full px-4 ${
+                isMyPlanActive
+                  ? "text-lime-400 font-semibold bg-lime-400/5"
+                  : "hover:bg-lime-400/5 hover:text-lime-400"
+              }`}
+            >
               My Plan
             </Link>
           </li>
+
         </ul>
       </div>
 
-      {/* Plan / Saved */}
-      <div className="navbar-end gap-2">
-        <Link className="btn-ntg" href="/my-plan">
-          Plan
-        </Link>
 
-        <Link className="btn-ntg" href="/my-plan">
-          Saved
-        </Link>
+      {/* RIGHT — Plan + Saved */}
+      <div className="navbar-end">
+        <div className="flex items-center gap-4 lg:gap-6 text-[13px]">
+
+          {/* Plan */}
+          <div className="flex items-center gap-2 text-[#d0d4da]">
+            <span>Plan</span>
+
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#b6ff00] px-1 text-[11px] font-bold text-black">
+              {addWorkouts.length}
+            </span>
+          </div>
+
+          {/* Saved */}
+          <div className="flex items-center gap-2 text-[#9299a5]">
+            <span>Saved</span>
+
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full border border-[#303640] px-1 text-[11px]">
+              {savedWorkouts.length}
+            </span>
+          </div>
+
+        </div>
       </div>
+
     </div>
   );
 };
