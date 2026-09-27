@@ -8,7 +8,7 @@ FitLog allows users to explore workouts, view detailed exercise information, sav
 
 ## 🌐 Live Demo
 
-**Live Website:** `YOUR_LIVE_LINK`
+**Live Website:** `YOUR_LIVE_LINKhttps://jessicarozario22.github.io/Fit-Log/`
 
 **GitHub Repository:** `YOUR_GITHUB_REPOSITORY_LINK`
 
