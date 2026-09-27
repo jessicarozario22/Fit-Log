@@ -11,13 +11,26 @@ interface IWorkoutDetailsPage {
 }
 
 const listworkouts = async () => {
-  const response = await fetch(
-    "http://localhost:3000/workoutsData.json"
-  );
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workoutsData.json`
+    );
 
-  const data = await response.json();
+    if (!response.ok) {
+      throw new Error("Failed to fetch workouts data");
+    }
 
-  return data;
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching workouts data:",
+      error
+    );
+
+    return [];
+  }
 };
 
 const WorkoutDetailsPage = async ({
@@ -50,8 +63,11 @@ const WorkoutDetailsPage = async ({
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1fr] lg:gap-14">
 
           {/* IMAGE */}
+
           <div className="w-full">
+
             <div className="overflow-hidden rounded-2xl">
+
               <Image
                 src={workout.image}
                 alt={workout.name}
@@ -60,24 +76,31 @@ const WorkoutDetailsPage = async ({
                 priority
                 className="h-auto max-h-[735px] w-full object-cover"
               />
+
             </div>
+
           </div>
 
           {/* DETAILS */}
+
           <div className="flex flex-col">
 
             {/* Title */}
+
             <h1 className="text-4xl font-black uppercase leading-[1.05] tracking-tight sm:text-5xl">
               {workout.name}
             </h1>
 
             {/* Description */}
+
             <p className="mt-4 max-w-2xl text-base leading-6 text-gray-400">
               {workout.description}
             </p>
 
             {/* Muscle Groups */}
+
             <div className="mt-5 flex flex-wrap gap-2">
+
               {workout.muscleGroups.map(
                 (group: string, index: number) => (
                   <span
@@ -88,13 +111,17 @@ const WorkoutDetailsPage = async ({
                   </span>
                 )
               )}
+
             </div>
 
             {/* Stats */}
+
             <div className="mt-7 overflow-hidden rounded-2xl border border-[#272c35] bg-[#151920]">
 
               {/* Equipment */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Equipment
                 </span>
@@ -102,10 +129,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.equipment}
                 </span>
+
               </div>
 
               {/* Difficulty */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Difficulty
                 </span>
@@ -113,10 +143,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.difficulty}
                 </span>
+
               </div>
 
               {/* Sets */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Sets
                 </span>
@@ -124,10 +157,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.sets}
                 </span>
+
               </div>
 
               {/* Reps */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Reps
                 </span>
@@ -135,10 +171,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.reps}
                 </span>
+
               </div>
 
               {/* Duration */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Duration
                 </span>
@@ -146,10 +185,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.duration} min
                 </span>
+
               </div>
 
               {/* Calories */}
+
               <div className="flex items-center justify-between border-b border-[#272c35] px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Calories
                 </span>
@@ -157,10 +199,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.caloriesBurned} kcal
                 </span>
+
               </div>
 
               {/* Rating */}
+
               <div className="flex items-center justify-between px-6 py-4">
+
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                   Rating
                 </span>
@@ -168,11 +213,13 @@ const WorkoutDetailsPage = async ({
                 <span className="text-sm text-gray-200">
                   {workout.rating}
                 </span>
+
               </div>
 
             </div>
 
             {/* Instructions */}
+
             <div className="mt-8">
 
               <h2 className="text-lg font-black uppercase tracking-wide">
@@ -180,6 +227,7 @@ const WorkoutDetailsPage = async ({
               </h2>
 
               <ol className="mt-4 space-y-4">
+
                 {workout.instructions.map(
                   (
                     instruction: string,
@@ -189,30 +237,38 @@ const WorkoutDetailsPage = async ({
                       key={index}
                       className="flex gap-4 text-sm leading-6 text-gray-300"
                     >
+
                       <span className="shrink-0 text-gray-400">
                         {index + 1}.
                       </span>
 
-                      <span>{instruction}</span>
+                      <span>
+                        {instruction}
+                      </span>
+
                     </li>
                   )
                 )}
+
               </ol>
 
             </div>
 
             {/* Buttons */}
+
             <div className="mt-9 flex flex-wrap gap-4">
 
               <AddToPlan workout={workout} />
+
               <SaveForLater workout={workout} />
 
             </div>
+
           </div>
+
         </div>
+
       </section>
-
-
 
     </main>
   );
