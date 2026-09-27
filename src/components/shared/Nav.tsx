@@ -66,7 +66,7 @@ const Nav = () => {
 
             <li>
               <Link
-                href="/my-app/src/app/ListedWorkouts/page.tsx"
+                href="/ListedWorkouts"
                 className={
                   isMyPlanActive
                     ? "text-lime-400 font-semibold bg-lime-400/5"

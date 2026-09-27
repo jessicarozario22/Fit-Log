@@ -1,4 +1,4 @@
-import ListedWorkouts from "@/components/ListedWorkouts/ListedWorkouts";
+import ListedWorkouts from "@/app/ListedWorkouts/page";
 
 const MyPlanPage = () => {
   return <ListedWorkouts />;
