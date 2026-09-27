@@ -1,13 +1,23 @@
+
 "use client";
 
 import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import { WorkoutContext } from "@/context/WorkoutContext";
+import { IWorkout } from "@/types/workout.types";
 
+interface AddToPlanProps {
+  workout: IWorkout;
+}
 
+const AddToPlan = ({ workout }: AddToPlanProps) => {
+  const workoutContext = useContext(WorkoutContext);
 
-const AddToPlan = ({ workout }) => {
-  const { addToPlan } = useContext(WorkoutContext);
+  if (!workoutContext) {
+    return null;
+  }
+
+  const { addToPlan } = workoutContext;
 
   const handleAdd = () => {
     addToPlan(workout);
@@ -18,8 +28,7 @@ const AddToPlan = ({ workout }) => {
   return (
     <button
       onClick={handleAdd}
-      className="flex items-center gap-2 rounded-xl border border-[#39404d] bg-lime-300 px-6 py-3 text-sm font-semibold
-       text-black transition hover:text-black hover:font-semibold hover:bg-lime-400"
+      className="flex items-center gap-2 rounded-xl border border-[#39404d] bg-lime-300 px-6 py-3 text-sm font-semibold text-black transition hover:bg-lime-400 hover:font-semibold"
     >
       Add to Today's Plan
     </button>
@@ -27,3 +36,4 @@ const AddToPlan = ({ workout }) => {
 };
 
 export default AddToPlan;
+

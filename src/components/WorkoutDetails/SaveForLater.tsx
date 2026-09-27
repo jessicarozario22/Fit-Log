@@ -1,13 +1,25 @@
+
 "use client";
 
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { WorkoutContext } from "@/context/WorkoutContext";
+import { IWorkout } from "@/types/workout.types";
 import { Bookmark } from "lucide-react";
 
-const SaveForLater = ({ workout }) => {
-  const { saveForLater } = useContext(WorkoutContext);
+interface SaveForLaterProps {
+  workout: IWorkout;
+}
+
+const SaveForLater = ({ workout }: SaveForLaterProps) => {
+  const workoutContext = useContext(WorkoutContext);
   const [saved, setSaved] = useState(false);
+
+  if (!workoutContext) {
+    return null;
+  }
+
+  const { saveForLater } = workoutContext;
 
   const handleSave = () => {
     saveForLater(workout);
@@ -37,3 +49,4 @@ const SaveForLater = ({ workout }) => {
 };
 
 export default SaveForLater;
+
