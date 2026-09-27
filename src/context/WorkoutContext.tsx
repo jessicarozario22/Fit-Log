@@ -1,17 +1,41 @@
+
 "use client";
 
 import React, {
   createContext,
   useEffect,
   useState,
+  ReactNode,
 } from "react";
 
-export const WorkoutContext = createContext(null);
+import { IWorkout } from "@/types/workout.types";
 
-const WorkoutProvider = ({ children }) => {
-  const [addWorkouts, setAddWorkouts] = useState([]);
-  const [savedWorkouts, setSavedWorkouts] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+interface WorkoutContextType {
+  addWorkouts: IWorkout[];
+  setAddWorkouts: React.Dispatch<React.SetStateAction<IWorkout[]>>;
+
+  savedWorkouts: IWorkout[];
+  setSavedWorkouts: React.Dispatch<React.SetStateAction<IWorkout[]>>;
+
+  addToPlan: (workout: IWorkout) => void;
+  saveForLater: (workout: IWorkout) => void;
+  moveToPlan: (id: number, index: number) => void;
+
+  isLoaded: boolean;
+}
+
+interface WorkoutProviderProps {
+  children: ReactNode;
+}
+
+export const WorkoutContext = createContext<WorkoutContextType | null>(null);
+
+const WorkoutProvider = ({
+  children,
+}: WorkoutProviderProps) => {
+  const [addWorkouts, setAddWorkouts] = useState<IWorkout[]>([]);
+  const [savedWorkouts, setSavedWorkouts] = useState<IWorkout[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   // --------------------------------
   // Load data from localStorage
@@ -66,7 +90,7 @@ const WorkoutProvider = ({ children }) => {
   // Add workout to My Plan
   // --------------------------------
 
-  const addToPlan = (workout) => {
+  const addToPlan = (workout: IWorkout) => {
     setAddWorkouts((prev) => {
       const alreadyAdded = prev.some(
         (item) => item.id === workout.id
@@ -84,7 +108,7 @@ const WorkoutProvider = ({ children }) => {
   // Save workout for later
   // --------------------------------
 
-  const saveForLater = (workout) => {
+  const saveForLater = (workout: IWorkout) => {
     setSavedWorkouts((prev) => {
       const alreadySaved = prev.some(
         (item) => item.id === workout.id
@@ -102,7 +126,7 @@ const WorkoutProvider = ({ children }) => {
   // Saved → My Plan
   // --------------------------------
 
-  const moveToPlan = (id, index) => {
+  const moveToPlan = (id: number, index: number) => {
     const workout = savedWorkouts[index];
 
     if (!workout) return;
@@ -146,3 +170,4 @@ const WorkoutProvider = ({ children }) => {
 };
 
 export default WorkoutProvider;
+
