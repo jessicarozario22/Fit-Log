@@ -1,18 +1,17 @@
 import WorkoutCards from "@/components/shared/WorkoutCards";
 import { IWorkout } from "@/types/workout.types";
+import fs from "fs/promises";
+import path from "path";
 
 const Workouts = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+  const filePath = path.join(
+    process.cwd(),
+    "public",
+    "workoutsData.json"
+  );
 
-  const response = await fetch(`${baseUrl}/workoutsData.json`, {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch workouts: ${response.status}`);
-  }
-
-  const workoutsData: IWorkout[] = await response.json();
+  const file = await fs.readFile(filePath, "utf-8");
+  const workoutsData: IWorkout[] = JSON.parse(file);
 
   return (
     <section className="container mx-auto py-[70px]">
