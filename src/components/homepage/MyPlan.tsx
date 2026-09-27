@@ -25,34 +25,52 @@ const MyPlanPage = () => {
   const [activeTab, setActiveTab] =
     useState<"today" | "saved">("today");
 
+  const [sortBy, setSortBy] =
+    useState("duration-low");
+
+  const [sortOpen, setSortOpen] =
+    useState(false);
+
   // --------------------------------
-  // Wait for localStorage data
+  // Loading
   // --------------------------------
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-[#0d0f12]" />
+      <div className="flex min-h-screen items-center justify-center bg-[#0d0f12] text-white">
+        <div className="flex flex-col items-center">
+
+          <div className="mb-5 h-10 w-10 animate-spin rounded-full border-4 border-[#282e38] border-t-[#b6ff00]" />
+
+          <p className="text-sm font-semibold tracking-wide text-[#b6ff00]">
+            LOADING FITLOG
+          </p>
+
+          <p className="mt-1 text-xs text-[#737b87]">
+            Getting your workout plan ready...
+          </p>
+
+        </div>
+      </div>
     );
   }
 
   // --------------------------------
-  // Remove workout from plan
+  // Remove workout
   // --------------------------------
 
   const removeWorkout = (
-    id: string | number,
-    index: number
+    id: string | number
   ) => {
     setAddWorkouts((prev) =>
       prev.filter(
-        (workout, i) =>
-          !(workout.id === id && i === index)
+        (workout) => workout.id !== id
       )
     );
   };
 
   // --------------------------------
-  // Current list
+  // Current workouts
   // --------------------------------
 
   const workouts =
@@ -61,30 +79,111 @@ const MyPlanPage = () => {
       : savedWorkouts;
 
   // --------------------------------
+  // Sorting
+  // --------------------------------
+
+  const sortedWorkouts = [...workouts].sort(
+    (a, b) => {
+      switch (sortBy) {
+
+        case "duration-low":
+          return (
+            Number(a.duration || 0) -
+            Number(b.duration || 0)
+          );
+
+        case "duration-high":
+          return (
+            Number(b.duration || 0) -
+            Number(a.duration || 0)
+          );
+
+        case "calories-low":
+          return (
+            Number(a.caloriesBurned || 0) -
+            Number(b.caloriesBurned || 0)
+          );
+
+        case "calories-high":
+          return (
+            Number(b.caloriesBurned || 0) -
+            Number(a.caloriesBurned || 0)
+          );
+
+        case "rating-high":
+          return (
+            Number(b.rating || 0) -
+            Number(a.rating || 0)
+          );
+
+        default:
+          return 0;
+      }
+    }
+  );
+
+  // --------------------------------
+  // Sort label
+  // --------------------------------
+
+  const getSortLabel = () => {
+    switch (sortBy) {
+      case "duration-low":
+        return "Duration";
+
+      case "duration-high":
+        return "Duration ↓";
+
+      case "calories-low":
+        return "Calories ↑";
+
+      case "calories-high":
+        return "Calories ↓";
+
+      case "rating-high":
+        return "Rating ↓";
+
+      default:
+        return "Duration";
+    }
+  };
+
+  // --------------------------------
+  // Select sort
+  // --------------------------------
+
+  const handleSort = (value: string) => {
+    setSortBy(value);
+    setSortOpen(false);
+  };
+
+  // --------------------------------
   // Summary
   // --------------------------------
 
-  const totalExercises = addWorkouts.length;
+  const totalExercises =
+    addWorkouts.length;
 
-  const totalMinutes = addWorkouts.reduce(
-    (total, workout) =>
-      total + Number(workout.duration || 0),
-    0
-  );
+  const totalMinutes =
+    addWorkouts.reduce(
+      (total, workout) =>
+        total +
+        Number(workout.duration || 0),
+      0
+    );
 
-  const totalCalories = addWorkouts.reduce(
-    (total, workout) =>
-      total +
-      Number(workout.caloriesBurned || 0),
-    0
-  );
+  const totalCalories =
+    addWorkouts.reduce(
+      (total, workout) =>
+        total +
+        Number(
+          workout.caloriesBurned || 0
+        ),
+      0
+    );
 
   return (
     <div className="min-h-screen bg-[#0d0f12] text-white">
-
-      {/* =========================================
-          MAIN
-      ========================================== */}
 
       <main className="mx-auto max-w-[1184px] px-6 py-[42px]">
 
@@ -98,15 +197,11 @@ const MyPlanPage = () => {
           Cap of five lifts for today. Finish them, then load more.
         </p>
 
-        {/* =========================================
-            SUMMARY CARD
-        ========================================== */}
+        {/* Summary */}
 
         <section className="mt-6 h-[122px] rounded-[17px] border border-[#282e38] bg-[#13171d]">
 
           <div className="grid h-full grid-cols-3">
-
-            {/* Exercises */}
 
             <div className="flex flex-col justify-center border-r border-[#282e38] px-6">
 
@@ -120,8 +215,6 @@ const MyPlanPage = () => {
 
             </div>
 
-            {/* Minutes */}
-
             <div className="flex flex-col justify-center border-r border-[#282e38] px-8">
 
               <span className="text-[12px] text-[#9299a5]">
@@ -133,8 +226,6 @@ const MyPlanPage = () => {
               </span>
 
             </div>
-
-            {/* Calories */}
 
             <div className="flex flex-col justify-center px-8">
 
@@ -152,9 +243,7 @@ const MyPlanPage = () => {
 
         </section>
 
-        {/* =========================================
-            TABS + SORT
-        ========================================== */}
+        {/* Tabs + Sort */}
 
         <div className="mt-8 flex items-center justify-between">
 
@@ -192,29 +281,119 @@ const MyPlanPage = () => {
 
           {/* Sort */}
 
-          <div className="flex items-center gap-3">
+          <div className="relative flex items-center gap-3">
 
             <span className="text-[12px] text-[#8a919c]">
               Sort By
             </span>
 
-            <button className="flex h-[34px] items-center gap-3 rounded-[9px] border border-[#2b313b] bg-[#11151a] px-3 text-[12px]">
-              Duration
+            <button
+              type="button"
+              onClick={() =>
+                setSortOpen(!sortOpen)
+              }
+              className="flex h-[34px] min-w-[125px] items-center justify-between gap-3 rounded-[9px] border border-[#2b313b] bg-[#11151a] px-3 text-[12px] text-white transition hover:border-[#b6ff00]"
+            >
+              <span>
+                {getSortLabel()}
+              </span>
 
-              <span className="text-[#858c97]">
+              <span
+                className={`text-[#858c97] transition-transform ${
+                  sortOpen
+                    ? "rotate-180"
+                    : ""
+                }`}
+              >
                 ⌄
               </span>
             </button>
+
+            {/* Dropdown */}
+
+            {sortOpen && (
+              <div className="absolute right-0 top-[42px] z-50 w-[190px] overflow-hidden rounded-[10px] border border-[#2b313b] bg-[#151920] p-1 shadow-xl">
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSort("duration-low")
+                  }
+                  className={`w-full rounded-[7px] px-3 py-2.5 text-left text-[12px] transition ${
+                    sortBy === "duration-low"
+                      ? "bg-[#b6ff00]/10 text-[#b6ff00]"
+                      : "text-[#c5cad1] hover:bg-[#202630]"
+                  }`}
+                >
+                  Duration: Low to High
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSort("duration-high")
+                  }
+                  className={`w-full rounded-[7px] px-3 py-2.5 text-left text-[12px] transition ${
+                    sortBy === "duration-high"
+                      ? "bg-[#b6ff00]/10 text-[#b6ff00]"
+                      : "text-[#c5cad1] hover:bg-[#202630]"
+                  }`}
+                >
+                  Duration: High to Low
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSort("calories-low")
+                  }
+                  className={`w-full rounded-[7px] px-3 py-2.5 text-left text-[12px] transition ${
+                    sortBy === "calories-low"
+                      ? "bg-[#b6ff00]/10 text-[#b6ff00]"
+                      : "text-[#c5cad1] hover:bg-[#202630]"
+                  }`}
+                >
+                  Calories: Low to High
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSort("calories-high")
+                  }
+                  className={`w-full rounded-[7px] px-3 py-2.5 text-left text-[12px] transition ${
+                    sortBy === "calories-high"
+                      ? "bg-[#b6ff00]/10 text-[#b6ff00]"
+                      : "text-[#c5cad1] hover:bg-[#202630]"
+                  }`}
+                >
+                  Calories: High to Low
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSort("rating-high")
+                  }
+                  className={`w-full rounded-[7px] px-3 py-2.5 text-left text-[12px] transition ${
+                    sortBy === "rating-high"
+                      ? "bg-[#b6ff00]/10 text-[#b6ff00]"
+                      : "text-[#c5cad1] hover:bg-[#202630]"
+                  }`}
+                >
+                  Rating: High to Low
+                </button>
+
+              </div>
+            )}
 
           </div>
 
         </div>
 
-        {/* =========================================
-            EMPTY STATE
-        ========================================== */}
+        {/* Empty State */}
 
-        {workouts.length === 0 ? (
+        {sortedWorkouts.length === 0 ? (
 
           <div className="mt-6 rounded-[16px] border border-[#282e38] bg-[#13171d] p-12 text-center">
 
@@ -232,163 +411,151 @@ const MyPlanPage = () => {
 
         ) : (
 
-          /* =========================================
-             WORKOUT CARDS
-          ========================================== */
+          /* Workout Cards */
 
           <div className="mt-6 flex flex-col gap-4">
 
-            {workouts.map((workout, index) => (
+            {sortedWorkouts.map(
+              (workout) => (
 
-              <div
-                key={`${workout.id}-${index}`}
-                className="flex min-h-[114px] items-center rounded-[16px] border border-[#282e38] bg-[#13171d] px-4 py-4"
-              >
+                <div
+                  key={workout.id}
+                  className="flex min-h-[114px] items-center rounded-[16px] border border-[#282e38] bg-[#13171d] px-4 py-4"
+                >
 
-                {/* IMAGE */}
+                  {/* Image */}
 
-                <div className="relative h-[80px] w-[144px] shrink-0 overflow-hidden rounded-[10px]">
+                  <div className="relative h-[80px] w-[144px] shrink-0 overflow-hidden rounded-[10px]">
 
-                  <Image
-                    src={workout.image}
-                    alt={workout.name}
-                    fill
-                    sizes="144px"
-                    className="object-cover"
-                  />
+                    <Image
+                      src={workout.image}
+                      alt={workout.name}
+                      fill
+                      sizes="144px"
+                      className="object-cover"
+                    />
 
-                </div>
+                  </div>
 
-                {/* INFORMATION */}
+                  {/* Information */}
 
-                <div className="ml-4 min-w-0 flex-1">
+                  <div className="ml-4 min-w-0 flex-1">
 
-                  <h2 className="truncate text-[16px] font-black uppercase">
-                    {workout.name}
-                  </h2>
+                    <h2 className="truncate text-[16px] font-black uppercase">
+                      {workout.name}
+                    </h2>
 
-                  <p className="mt-1 text-[12px] text-[#8c939f]">
-                    {workout.equipment}
-                  </p>
+                    <p className="mt-1 text-[12px] text-[#8c939f]">
+                      {workout.equipment}
+                    </p>
 
-                  {/* Meta */}
+                    <div className="mt-2 flex items-center gap-4 text-[12px] text-[#a4aab4]">
 
-                  <div className="mt-2 flex items-center gap-4 text-[12px] text-[#a4aab4]">
+                      <span className="flex items-center gap-1.5">
 
-                    {/* Duration */}
+                        <span className="text-[15px] text-[#b6ff00]">
+                          ◷
+                        </span>
 
-                    <span className="flex items-center gap-1.5">
+                        {workout.duration} min
 
-                      <span className="text-[15px] text-[#b6ff00]">
-                        ◷
                       </span>
 
-                      {workout.duration} min
+                      <span className="flex items-center gap-1.5">
 
-                    </span>
+                        <span className="text-[14px] text-[#b6ff00]">
+                          ♨
+                        </span>
 
-                    {/* Calories */}
+                        {workout.caloriesBurned} kcal
 
-                    <span className="flex items-center gap-1.5">
-
-                      <span className="text-[14px] text-[#b6ff00]">
-                        ♨
                       </span>
 
-                      {workout.caloriesBurned} kcal
+                      <span className="flex items-center gap-1.5">
 
-                    </span>
+                        <span className="text-[16px] text-[#b6ff00]">
+                          ☆
+                        </span>
 
-                    {/* Rating */}
+                        {workout.rating}
 
-                    <span className="flex items-center gap-1.5">
-
-                      <span className="text-[16px] text-[#b6ff00]">
-                        ☆
                       </span>
 
-                      {workout.rating}
+                    </div>
 
-                    </span>
+                  </div>
+
+                  {/* Actions */}
+
+                  <div className="ml-5 flex shrink-0 items-center gap-3">
+
+                    <Link
+                      href={`/workouts/${workout.id}`}
+                      className="flex h-[35px] items-center rounded-full border border-[#38404d] px-5 text-[12px] text-[#e0e3e7] transition hover:border-[#b6ff00] hover:text-[#b6ff00]"
+                    >
+                      View Details
+                    </Link>
+
+                    {activeTab === "today" && (
+
+                      <button
+                        onClick={() =>
+                          removeWorkout(
+                            workout.id
+                          )
+                        }
+                        className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
+                      >
+                        <span>✓</span>
+                        Mark as Done
+                      </button>
+
+                    )}
+
+                    {activeTab === "saved" && (
+
+                      <button
+                        onClick={() =>
+                          moveToPlan(
+                            workout.id,
+                            savedWorkouts.findIndex(
+                              (item) =>
+                                item.id ===
+                                workout.id
+                            )
+                          )
+                        }
+                        className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
+                      >
+                        Add to Plan
+                      </button>
+
+                    )}
+
+                    <button
+                      onClick={() => {
+
+                        if (
+                          activeTab === "today"
+                        ) {
+                          removeWorkout(
+                            workout.id
+                          );
+                        }
+
+                      }}
+                      aria-label="Remove workout"
+                      className="ml-1 flex h-8 w-8 items-center justify-center text-[19px] text-[#68717f] transition hover:text-red-400"
+                    >
+                      ×
+                    </button>
 
                   </div>
 
                 </div>
 
-                {/* ACTIONS */}
-
-                <div className="ml-5 flex shrink-0 items-center gap-3">
-
-                  {/* View Details */}
-
-                  <Link
-                    href={`/workouts/${workout.id}`}
-                    className="flex h-[35px] items-center rounded-full border border-[#38404d] px-5 text-[12px] text-[#e0e3e7] transition hover:border-[#b6ff00] hover:text-[#b6ff00]"
-                  >
-                    View Details
-                  </Link>
-
-                  {/* TODAY'S PLAN */}
-
-                  {activeTab === "today" && (
-
-                    <button
-                      onClick={() =>
-                        removeWorkout(
-                          workout.id,
-                          index
-                        )
-                      }
-                      className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
-                    >
-                      <span>✓</span>
-                      Mark as Done
-                    </button>
-
-                  )}
-
-                  {/* SAVED */}
-
-                  {activeTab === "saved" && (
-
-                    <button
-                      onClick={() =>
-                        moveToPlan(
-                          workout.id,
-                          index
-                        )
-                      }
-                      className="flex h-[35px] items-center gap-2 rounded-full bg-[#b6ff00] px-5 text-[12px] font-bold text-black transition hover:bg-[#c8ff45]"
-                    >
-                      Add to Plan
-                    </button>
-
-                  )}
-
-                  {/* Remove */}
-
-                  <button
-                    onClick={() => {
-
-                      if (activeTab === "today") {
-                        removeWorkout(
-                          workout.id,
-                          index
-                        );
-                      }
-
-                    }}
-                    aria-label="Remove workout"
-                    className="ml-1 flex h-8 w-8 items-center justify-center text-[19px] text-[#68717f] transition hover:text-red-400"
-                  >
-                    ×
-                  </button>
-
-                </div>
-
-              </div>
-
-            ))}
+              )
+            )}
 
           </div>
 
