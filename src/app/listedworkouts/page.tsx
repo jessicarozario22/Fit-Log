@@ -1,8 +1,7 @@
-
-
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { WorkoutContext } from "@/context/WorkoutContext";
 
@@ -71,7 +70,6 @@ const MyPlanPage = () => {
 
   return (
     <div className="min-h-screen bg-[#0d0f12] text-white">
-
 
       {/* =========================================
           MAIN
@@ -199,7 +197,7 @@ const MyPlanPage = () => {
               Duration
 
               <span className="text-[#858c97]">
-               ⌄
+                ⌄
               </span>
 
             </button>
@@ -331,11 +329,12 @@ const MyPlanPage = () => {
 
                   {/* View Details */}
 
-                  <button
-                    className="h-[35px] rounded-full border border-[#38404d] px-5 text-[12px] text-[#e0e3e7] transition hover:border-[#b6ff00] hover:text-[#b6ff00]"
+                  <Link
+                    href={`/workouts/${workout.id}`}
+                    className="flex h-[35px] items-center rounded-full border border-[#38404d] px-5 text-[12px] text-[#e0e3e7] transition hover:border-[#b6ff00] hover:text-[#b6ff00]"
                   >
                     View Details
-                  </button>
+                  </Link>
 
 
                   {/* TODAY'S PLAN */}
@@ -416,7 +415,6 @@ const MyPlanPage = () => {
         )}
 
       </main>
-
 
     </div>
   );

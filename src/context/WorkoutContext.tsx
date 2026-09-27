@@ -1,14 +1,71 @@
 "use client";
 
-import React, { createContext, useState } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 
 export const WorkoutContext = createContext(null);
 
 const WorkoutProvider = ({ children }) => {
   const [addWorkouts, setAddWorkouts] = useState([]);
   const [savedWorkouts, setSavedWorkouts] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  // --------------------------------
+  // Load data from localStorage
+  // --------------------------------
+
+  useEffect(() => {
+    try {
+      const storedPlan = localStorage.getItem("fitlog-plan");
+      const storedSaved = localStorage.getItem("fitlog-saved");
+
+      if (storedPlan) {
+        setAddWorkouts(JSON.parse(storedPlan));
+      }
+
+      if (storedSaved) {
+        setSavedWorkouts(JSON.parse(storedSaved));
+      }
+    } catch (error) {
+      console.error("Failed to load FitLog data:", error);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  // --------------------------------
+  // Save My Plan
+  // --------------------------------
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem(
+      "fitlog-plan",
+      JSON.stringify(addWorkouts)
+    );
+  }, [addWorkouts, isLoaded]);
+
+  // --------------------------------
+  // Save Saved Workouts
+  // --------------------------------
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem(
+      "fitlog-saved",
+      JSON.stringify(savedWorkouts)
+    );
+  }, [savedWorkouts, isLoaded]);
+
+  // --------------------------------
   // Add workout to My Plan
+  // --------------------------------
+
   const addToPlan = (workout) => {
     setAddWorkouts((prev) => {
       const alreadyAdded = prev.some(
@@ -23,7 +80,10 @@ const WorkoutProvider = ({ children }) => {
     });
   };
 
+  // --------------------------------
   // Save workout for later
+  // --------------------------------
+
   const saveForLater = (workout) => {
     setSavedWorkouts((prev) => {
       const alreadySaved = prev.some(
@@ -38,7 +98,10 @@ const WorkoutProvider = ({ children }) => {
     });
   };
 
+  // --------------------------------
   // Saved → My Plan
+  // --------------------------------
+
   const moveToPlan = (id, index) => {
     const workout = savedWorkouts[index];
 
@@ -73,6 +136,8 @@ const WorkoutProvider = ({ children }) => {
         addToPlan,
         saveForLater,
         moveToPlan,
+
+        isLoaded,
       }}
     >
       {children}

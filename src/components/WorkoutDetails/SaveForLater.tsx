@@ -1,17 +1,37 @@
 "use client";
-import React, { useContext } from "react";
+
+import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
 import { WorkoutContext } from "@/context/WorkoutContext";
+import { Bookmark } from "lucide-react";
 
 const SaveForLater = ({ workout }) => {
   const { saveForLater } = useContext(WorkoutContext);
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = () => {
+    saveForLater(workout);
+    setSaved(true);
+
+    toast.success("Workout saved for later!");
+  };
 
   return (
     <button
-      onClick={() => saveForLater(workout)}
-      className="flex items-center gap-2 rounded-xl border border-[#39404d] bg-transparent px-6 py-3 text-sm font-semibold text-gray-200 transition hover:bg-[#171b21]"
+      onClick={handleSave}
+      className={`flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-semibold transition ${
+        saved
+          ? "border-lime-400/40 bg-lime-400/10 text-lime-400"
+          : "border-[#39404d] bg-transparent text-gray-200 hover:bg-lime-300/5"
+      }`}
     >
-      <span>♡</span>
-      Save for later
+      <Bookmark
+        size={18}
+        strokeWidth={2}
+        fill={saved ? "currentColor" : "none"}
+      />
+
+      <span>Save for later</span>
     </button>
   );
 };
