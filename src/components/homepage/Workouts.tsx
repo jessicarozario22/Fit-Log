@@ -1,27 +1,18 @@
-
-import React from "react";
-import WorkoutCard from "../shared/WorkoutCards";
+import WorkoutCards from "@/components/shared/WorkoutCards";
 import { IWorkout } from "@/types/workout.types";
 
 const Workouts = async () => {
-  let workoutsData: IWorkout[] = [];
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workoutsData.json`,
-      {
-        cache: "no-store",
-      }
-    );
+  const response = await fetch(`${baseUrl}/workoutsData.json`, {
+    cache: "no-store",
+  });
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch workouts data");
-    }
-
-    workoutsData = await response.json();
-  } catch (error) {
-    console.error("Error fetching workouts data:", error);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch workouts: ${response.status}`);
   }
+
+  const workoutsData: IWorkout[] = await response.json();
 
   return (
     <section className="container mx-auto py-[70px]">
@@ -35,7 +26,7 @@ const Workouts = async () => {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {workoutsData.slice(0, 9).map((workout) => (
-          <WorkoutCard
+          <WorkoutCards
             key={workout.id}
             workout={workout}
           />

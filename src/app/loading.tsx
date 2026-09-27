@@ -1,11 +1,23 @@
-import React from 'react';
+
+import React from "react";
+import { LoaderCircle } from "lucide-react";
 
 const GlobalLoading = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#0C0D10] text-white">
+      <div className="flex items-center gap-3">
+        <LoaderCircle
+          size={24}
+          className="animate-spin text-lime-300"
+        />
+
+        <span className="text-sm font-medium text-gray-300">
+          Loading...
+        </span>
+      </div>
+    </div>
+  );
 };
 
-export default GlobalLoading ;
+export default GlobalLoading;
+
