@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { IWorkout } from "@/types/workout.types";
+import { Clock } from "lucide-react";
 
 interface IWorkoutProps {
   workout: IWorkout;
@@ -13,7 +14,7 @@ const WorkoutCards = ({
   workout,
 }: IWorkoutProps) => {
   return (
-    <div className="card bg-black shadow-md transition hover:scale-105 hover:shadow-xl">
+    <div className="card bg-[#15171D] shadow-md transition hover:scale-105 hover:shadow-xl">
 
       {/* Image */}
       <figure>
@@ -34,7 +35,7 @@ const WorkoutCards = ({
             (group, idx) => (
               <div
                 key={idx}
-                className="badge bg-lime-400 font-bold text-black"
+                className="badge bg-lime-300 font-bold text-black"
               >
                 {group}
               </div>
@@ -71,7 +72,7 @@ const WorkoutCards = ({
         <div className="mt-4 flex items-center justify-between gap-2">
 
           <span className="text-sm text-gray-500">
-            ⏱️ {workout.duration} min
+            <Clock /> {workout.duration} min
           </span>
 
           <div className="rating rating-sm">
@@ -92,7 +93,7 @@ const WorkoutCards = ({
 
           <Link
             href={`/workouts/${workout.id}`}
-            className="btn w-[126px] rounded-full bg-lime-500 text-black hover:bg-emerald-700"
+            className="btn w-[126px] rounded-md bg-lime-300 text-black hover:bg-lime-400"
           >
             View Details
           </Link>

@@ -5,7 +5,7 @@ import bannerImg from "@/assets/banner.png";
 
 const Banner = () => {
   return (
-    <section className="bg-black py-20">
+    <section className="bg-[#15171D] rounded-2xl m-8 py-20">
       <div className="grid grid-cols-2 gap-4 items-center container mx-auto p-4 rounded-4xl">
         
         <div className="space-y-4">
@@ -24,7 +24,7 @@ const Banner = () => {
           </p>
 
           <Link href="/workouts">
-            <button className="btn btn-success">
+            <button className="bg-lime-300 rounded-md h-10 w-52 font-semibold text-black hover:bg-lime-400 hover:font-bold">
               BROWSE WORKOUTS
             </button>
           </Link>

@@ -22,7 +22,7 @@ const Nav = () => {
   const isMyPlanActive = pathname === "/ListedWorkouts";
 
   return (
-    <div className="navbar bg-base-100 shadow-sm px-4 lg:px-8">
+    <div className=" navbar bg-[#0F1115] shadow-sm px-4 lg:px-8">
 
       {/* LEFT — Logo + Name */}
       <div className="navbar-start">
@@ -56,7 +56,7 @@ const Nav = () => {
                 href="/workouts"
                 className={
                   isWorkoutsActive
-                    ? "text-lime-400 font-semibold bg-lime-400/5"
+                    ? "text-lime-400 font-semibold bg-lime-400/2"
                     : ""
                 }
               >
